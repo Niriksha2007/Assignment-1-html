@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Event Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+                * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color:rgb(77, 201, 223);
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+.main-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #f4f4f4;
+    padding: 25px;
+    border-radius: 12px;
+    width: 450px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.card h2 {
+    color: #5c6bc0;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    resize: none;
+    height: 70px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #4b0caa;
+    color: white;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #0b9317;
+}
+
+.primary-btn {
+    width: 100%;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.event-card {
+    background: #e6f4ff;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+}
+
+.empty {
+    text-align: center;
+    margin-top: 20px;
+    color: gray;
+}
+
+.dom-card {
+    max-width: 930px;
+    margin: 30px auto;
+}
+
+#keyOutput {
+    background: #ddd;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 15px;
+}
+    </style>
+</head>
+<body>
+
+    <h1>🎯 Smart Event Dashboard</h1>
+
+    <div class="main-container">
+
+        <!-- Add Event Card -->
+        <form onsubmit="addEvent(event)">
+            <div class="card">
+                <h2>Add New Event</h2>
+
+                <label>Event Title:</label>
+                <input type="text" id="title" placeholder="Add your Event title" required>
+
+                <label>Event Date:</label>
+                <input type="date" id="date" placeholder="Add your Date here!" required>
+
+                <label>Category:</label>
+                <select id="category">
+                    <option>Category</option>
+                    <option>Conference</option>
+                    <option>Meetup</option>
+                    <option>Webinar</option>
+                    <option>Social</option>
+                </select>
+
+                <label>Description:</label>
+                <textarea id="description" placeholder="Write about event discription here!"></textarea>
+
+                <button type="submit" class="primary-btn">Add Event</button>
+            </div>
+        </form>
+
+        <!-- Events Section -->
+        <div class="card">
+            <h2>My Events</h2>
+
+            <div class="btn-group">
+                <button onclick="clearEvents()">Clear All Events</button>
+                <button onclick="addSample()">Add Sample Events</button>
+            </div>
+
+            <div id="eventList">
+                <p class="empty">No events Added yet. Add your first event!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- DOM Demo -->
+    <div class="card dom-card">
+        <h2>DOM Manipulation Demo</h2>
+        <div id="keyOutput">You Pressed: None</div>
+    </div>
+
+    <script src="Practice.js"></script>
+</body>
+</html>
+<script>
+const eventList = document.getElementById("eventList");
+
+// Add Event
+function addEvent(e) {
+    e.preventDefault();   // stop page reload
+
+    const title = document.getElementById("title").value;
+    const date = document.getElementById("date").value;
+    const category = document.getElementById("category").value;
+    const description = document.getElementById("description").value;
+
+    // Simple validation
+    if (title === "" || date === "" || category === "Category") {
+        alert("Please fill all required fields!");
+        return;
+    }
+
+    // Remove empty message
+    const emptyMsg = document.querySelector(".empty");
+    if (emptyMsg) {
+        emptyMsg.remove();
+    }
+
+    // Create new event card
+    const card = document.createElement("div");
+    card.className = "event-card";
+
+    card.innerHTML = `
+        <h3>${title}</h3>
+        <p><b>Date:</b> ${date}</p>
+        <p><b>Category:</b> ${category}</p>
+        <p>${description}</p>
+        <button onclick="deleteEvent(this)">Delete</button>
+    `;
+
+    eventList.append(card);
+
+    // Clear form after adding
+    document.querySelector("form").reset();
+}
+
+// Delete Event
+function deleteEvent(button) {
+    const card = button.parentElement;
+    card.remove();
+
+    // If no events left
+    if (eventList.children.length === 0) {
+        eventList.innerHTML =
+            `<p class="empty">No events yet. Add your first event!</p>`;
+    }
+}
+
+// Clear All Events
+function clearEvents() {
+    eventList.innerHTML =
+        `<p class="empty">No events yet. Add your first event!</p>`;
+}
+
+// Add Sample Events
+function addSample() {
+
+    const card1 = document.createElement("div");
+    card1.className = "event-card";
+    card1.innerHTML = `
+        <h3>Tech Conference 2026</h3>
+        <p><b>Date:</b> 2026-03-15</p>
+        <p><b>Category:</b> Conference</p>
+        <p>Annual technology conference.</p>
+        <button onclick="deleteEvent(this)">Delete</button>
+    `;
+
+    const card2 = document.createElement("div");
+    card2.className = "event-card";
+    card2.innerHTML = `
+        <h3>Frontend Meetup</h3>
+        <p><b>Date:</b> 2026-04-05</p>
+        <p><b>Category:</b> Meetup</p>
+        <p>Meetup for frontend developers.</p>
+        <button onclick="deleteEvent(this)">Delete</button>
+    `;
+
+    // Remove empty message
+    const emptyMsg = document.querySelector(".empty");
+    if (emptyMsg) {
+        emptyMsg.remove();
+    }
+
+    eventList.appendChild(card1);
+    eventList.appendChild(card2);
+}
+
+// Keyboard Demo
+document.addEventListener("keydown", function (e) {
+    document.getElementById("keyOutput").textContent =
+        "You Pressed: " + e.key;
+});
+</script>
